@@ -1,7 +1,7 @@
 package net.annedawson.tiptime
 
 /*
-Date: Wednesday 4th January 2023, 13:27 PT
+Date: Thursday 5th January 2023, 14:00 PT
 Programmer: Anne Dawson
 App: Tip Time
 File: MainActivity.kt
@@ -14,6 +14,7 @@ Status: Completed
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
@@ -55,16 +56,21 @@ fun TipTimeScreen() {
     var amountInput by remember {mutableStateOf("")}
     // The String amountInput is observable mutable state.
     // Initially, the value of amountInput is an empty string
+    // amountInput state was hoisted from EditNumberField and then passed to EditNumberField
 
     // remember and mutableStateOf are functions (that you can step into using the debugger)
+
+    var tipInput by remember { mutableStateOf("") }
+
+    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
 
     val amount = amountInput.toDoubleOrNull() ?: 0.0  //  convert String to Double
     // toDoubleOrNull() parses the string to a Double number
     // and returns the result or null if the string is not a valid representation of a number.
     // ?: is the Elvis operator
-    // The Elvis operator says assign what's on the left, but if it's null, assign what's on the right
+    // The Elvis operator permits the assignment of what's on the left, but if it's null, assign what's on the right
 
-    val tip = calculateTip(amount)
+    val tip = calculateTip(amount, tipPercent)
 
 
     Column(modifier = Modifier.padding(32.dp),verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -75,8 +81,10 @@ fun TipTimeScreen() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         EditNumberField(
+            label = R.string.bill_amount,
             value = amountInput,  // value is what is displayed in the Textbox, refreshed after the event below
             onValueChange = { amountInput = it }
+        )
             // Note that the "it" parameter holds the updated value in the text box
             // and is used to update the state (amountInput), which triggers recomposition i.e.
             // re-calling the composables that use that state.
@@ -86,7 +94,11 @@ fun TipTimeScreen() {
             // Any input to the text box triggers the event to place the current value (it)
             // into the amountInput state, then as the state is observable,
             // the composable is run again with the new data, so that the UI is redrawn with the new data.
-            )
+        EditNumberField(
+            label = R.string.how_was_the_service,
+            value = tipInput,
+            onValueChange = { tipInput = it }
+        )
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = stringResource(R.string.tip_amount, tip), // the string tip is substituted for %s in tip_amount
@@ -102,13 +114,15 @@ fun TipTimeScreen() {
 
 @Composable
 fun EditNumberField(
+    @StringRes label: Int,  // annotation  denote to that the label parameter is expected to be a string resource reference
     value: String,  // to used in the TextField
-    onValueChange: (String) -> Unit  // to be used in the TextField
+    onValueChange: (String) -> Unit,  // to be used in the TextField
+    modifier: Modifier = Modifier
 )
 {
     TextField(
         value = value,  // the amountInput state is passed to TextField value
-        // a TextField's value is the string displayed in its box on the UI
+        // a TextField's value is the string displayed in its text box on the UI
         onValueChange = onValueChange,  // onValueChange is a callback lambda event -
         // i.e. what must occur when the value changes.
         // "it" is the updated text the text box.
@@ -117,7 +131,7 @@ fun EditNumberField(
         // Run through the debugger and monitor the values of variables at the point of app suspension.
         // Press Resume program button to resume.
         // You can see the value of "it" change as the program runs.
-        label = { Text(stringResource(R.string.cost_of_service)) },
+        label = { Text(stringResource(label)) },
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true
