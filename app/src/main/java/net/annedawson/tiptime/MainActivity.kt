@@ -1,13 +1,13 @@
 package net.annedawson.tiptime
 
 /*
-Date: Thursday 5th January 2023, 14:00 PT
+Date: Tuesday 17th January 2023, 10:12 PT
 Programmer: Anne Dawson
 App: Tip Time
 File: MainActivity.kt
 Purpose: Introduction to state in Compose
 From: https://developer.android.com/codelabs/basic-android-kotlin-compose-using-state?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-using-state#0
-Status: Completed
+Status: Completed to end of Section 5: Set an action button
 */
 
 
@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,6 +83,10 @@ fun TipTimeScreen() {
         Spacer(modifier = Modifier.height(16.dp))
         EditNumberField(
             label = R.string.bill_amount,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
             value = amountInput,  // value is what is displayed in the Textbox, refreshed after the event below
             onValueChange = { amountInput = it }
         )
@@ -96,6 +101,10 @@ fun TipTimeScreen() {
             // the composable is run again with the new data, so that the UI is redrawn with the new data.
         EditNumberField(
             label = R.string.how_was_the_service,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             value = tipInput,
             onValueChange = { tipInput = it }
         )
@@ -115,9 +124,10 @@ fun TipTimeScreen() {
 @Composable
 fun EditNumberField(
     @StringRes label: Int,  // annotation  denote to that the label parameter is expected to be a string resource reference
+    keyboardOptions: KeyboardOptions,
     value: String,  // to used in the TextField
     onValueChange: (String) -> Unit,  // to be used in the TextField
-    modifier: Modifier = Modifier
+    //modifier: Modifier = Modifier
 )
 {
     TextField(
@@ -133,7 +143,7 @@ fun EditNumberField(
         // You can see the value of "it" change as the program runs.
         label = { Text(stringResource(label)) },
         modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = keyboardOptions,
         singleLine = true
     )
 }
