@@ -1,21 +1,21 @@
 package net.annedawson.tiptime
 
 /*
-Date: Tuesday 17th January 2023, 10:12 PT
+Date: Tuesday 17th January 2023, 11:20 PT
 Programmer: Anne Dawson
 App: Tip Time
 File: MainActivity.kt
 Purpose: Introduction to state in Compose
 From: https://developer.android.com/codelabs/basic-android-kotlin-compose-using-state?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-using-state#0
-Status: Completed to end of Section 5: Set an action button
+Status: Completed to end of Section 6: Set keyboard actions
 */
-
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -24,6 +24,8 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -73,6 +75,7 @@ fun TipTimeScreen() {
 
     val tip = calculateTip(amount, tipPercent)
 
+    val focusManager = LocalFocusManager.current  // Unit 6: Set keyboard actions
 
     Column(modifier = Modifier.padding(32.dp),verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
@@ -86,6 +89,10 @@ fun TipTimeScreen() {
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(  // Unit 6: Set keyboard actions
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            // import androidx.compose.ui.focus.FocusDirection
             ),
             value = amountInput,  // value is what is displayed in the Textbox, refreshed after the event below
             onValueChange = { amountInput = it }
@@ -105,6 +112,8 @@ fun TipTimeScreen() {
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
+            keyboardActions = KeyboardActions(  // Unit 6: Set keyboard actions
+                onDone = { focusManager.clearFocus() }),
             value = tipInput,
             onValueChange = { tipInput = it }
         )
@@ -125,6 +134,7 @@ fun TipTimeScreen() {
 fun EditNumberField(
     @StringRes label: Int,  // annotation  denote to that the label parameter is expected to be a string resource reference
     keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
     value: String,  // to used in the TextField
     onValueChange: (String) -> Unit,  // to be used in the TextField
     //modifier: Modifier = Modifier
@@ -144,6 +154,7 @@ fun EditNumberField(
         label = { Text(stringResource(label)) },
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         singleLine = true
     )
 }
