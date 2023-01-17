@@ -1,13 +1,13 @@
 package net.annedawson.tiptime
 
 /*
-Date: Tuesday 17th January 2023, 11:20 PT
+Date: Tuesday 17th January 2023, 13:37 PT
 Programmer: Anne Dawson
 App: Tip Time
 File: MainActivity.kt
 Purpose: Introduction to state in Compose
 From: https://developer.android.com/codelabs/basic-android-kotlin-compose-using-state?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-using-state#0
-Status: Completed to end of Section 6: Set keyboard actions
+Status: Completed to end of Unit 7 : Add a switch (last section of the codelab)
 */
 
 import android.os.Bundle
@@ -17,14 +17,12 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,9 +71,12 @@ fun TipTimeScreen() {
     // ?: is the Elvis operator
     // The Elvis operator permits the assignment of what's on the left, but if it's null, assign what's on the right
 
-    val tip = calculateTip(amount, tipPercent)
+
 
     val focusManager = LocalFocusManager.current  // Unit 6: Set keyboard actions
+
+    var roundUp by remember { mutableStateOf(false) }
+    val tip = calculateTip(amount, tipPercent, roundUp)
 
     Column(modifier = Modifier.padding(32.dp),verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
@@ -117,7 +118,8 @@ fun TipTimeScreen() {
             value = tipInput,
             onValueChange = { tipInput = it }
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        RoundTheTipRow(roundUp = roundUp, onRoundUpChanged = { roundUp = it })
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = stringResource(R.string.tip_amount, tip), // the string tip is substituted for %s in tip_amount
             // The above is an example of string formatting.
@@ -159,13 +161,39 @@ fun EditNumberField(
     )
 }
 
-
+@Composable
+fun RoundTheTipRow(
+    roundUp: Boolean,
+    onRoundUpChanged:   (Boolean) -> Unit,
+    modifier: Modifier = Modifier) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(48.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = stringResource(R.string.round_up_tip))
+        Switch(  // import androidx.compose.material.Switch
+            checked = roundUp,
+            onCheckedChange = onRoundUpChanged,
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.End),
+            colors = SwitchDefaults.colors(
+                uncheckedThumbColor = Color.DarkGray
+            )
+        )
+    }
+}
 
 private fun calculateTip(
     amount: Double,
-    tipPercent: Double = 15.0
+    tipPercent: Double = 15.0,
+    roundUp: Boolean
 ): String {
-    val tip = tipPercent / 100 * amount
+    var tip = tipPercent / 100 * amount
+    if (roundUp)
+        tip = kotlin.math.ceil(tip)
     return NumberFormat.getCurrencyInstance().format(tip) // convert the number to a currency formatted string
 }
 
