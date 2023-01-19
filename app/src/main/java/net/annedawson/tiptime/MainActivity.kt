@@ -1,19 +1,21 @@
 package net.annedawson.tiptime
 
 /*
-Date: Tuesday 17th January 2023, 13:37 PT
+Date: Wednesday 18th January 2023, 8:38 PT
 Programmer: Anne Dawson
 App: Tip Time
 File: MainActivity.kt
 Purpose: Introduction to state in Compose
 From: https://developer.android.com/codelabs/basic-android-kotlin-compose-using-state?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-using-state#0
-Status: Completed to end of Unit 7 : Add a switch (last section of the codelab)
+Status: Completed to end of Unit 7 : Add a switch (last section of the codelab) before Write automated tests
+https://developer.android.com/codelabs/basic-android-kotlin-compose-write-automated-tests?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-write-automated-tests#3
 */
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -185,12 +187,13 @@ fun RoundTheTipRow(
         )
     }
 }
+// change "private" to "internal" to allow module access for local testing, see:
+// https://developer.android.com/codelabs/basic-android-kotlin-compose-write-automated-tests?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-write-automated-tests#3
+// private fun calculateTip( amount: Double, tipPercent: Double = 15.0, roundUp: Boolean ): String {
 
-private fun calculateTip(
-    amount: Double,
-    tipPercent: Double = 15.0,
-    roundUp: Boolean
-): String {
+@VisibleForTesting
+// This makes the method public, but indicates to others that it's only public for testing purposes.
+internal fun calculateTip( amount: Double, tipPercent: Double = 15.0, roundUp: Boolean ): String {
     var tip = tipPercent / 100 * amount
     if (roundUp)
         tip = kotlin.math.ceil(tip)
