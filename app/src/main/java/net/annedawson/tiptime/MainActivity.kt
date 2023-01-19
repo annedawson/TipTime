@@ -1,13 +1,14 @@
 package net.annedawson.tiptime
 
 /*
-Date: Wednesday 18th January 2023, 8:38 PT
+Date: Thursday 19th January 2023, 7:58 PT
 Programmer: Anne Dawson
 App: Tip Time
 File: MainActivity.kt
 Purpose: Introduction to state in Compose
 From: https://developer.android.com/codelabs/basic-android-kotlin-compose-using-state?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-using-state#0
-Status: Completed to end of Unit 7 : Add a switch (last section of the codelab) before Write automated tests
+Status: Completed to end of Unit 2, Pathway 3, Section 5
+        Part 4 Write automated tests, Add a local unit test
 https://developer.android.com/codelabs/basic-android-kotlin-compose-write-automated-tests?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-write-automated-tests#3
 */
 
